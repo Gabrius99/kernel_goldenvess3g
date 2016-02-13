@@ -439,20 +439,6 @@ static struct pxa988_cpu_opt pxa988_op_array_z1z2[] = {
 		.cp_clk_sel = AP_CLK_SRC_PLL2,
 #endif
 	},
-#if 0
-	/*
-	 * pll3 has duty cycle issue on Z1 if its rate is higher than 800M,
-	 * disable 1G PP at first on Z1
-	 */
-	{
-		.pclk = 1000,
-		.l2clk = 500,
-		.pdclk = 250,
-		.baclk = 250,
-		.periphclk = 125,
-		.ap_clk_sel = AP_CLK_SRC_PLL3P,
-	},
-#endif
 	{
 		.pclk = 1200,
 		.l2clk = 600,
@@ -508,21 +494,6 @@ static struct pxa988_cpu_opt pxa988_op_array_z3ax[] = {
 		.periphclk = 133,
 		.ap_clk_sel = AP_CLK_SRC_PLL2,
 	},
-	/*
-	* As pll3 master frequency change is not supported, so
-	* will filter pp from pll3 according to pll3 frequency
-	*/
-#if !defined(CONFIG_CORE_1248)
-	{
-		.pclk = 1205,
-		.l2clk = 602,
-		.pdclk = 602,
-		.baclk = 301,
-		.periphclk = 150,
-		.ap_clk_sel = AP_CLK_SRC_PLL3P,
-		},		
-#else
-	
 	{
 		.pclk = 1248,
 		.l2clk = 624,
@@ -531,68 +502,7 @@ static struct pxa988_cpu_opt pxa988_op_array_z3ax[] = {
 		.periphclk = 156,
 		.ap_clk_sel = AP_CLK_SRC_PLL1_1248,
 	},
-#endif	
 };
-
-static struct pxa988_cpu_opt pxa1088_op_array[] = {
-	{
-		.pclk = 156,
-		.pdclk = 78,
-		.baclk = 78,
-		.ap_clk_sel = AP_CLK_SRC_PLL1_624,
-	},
-	{
-		.pclk = 312,
-		.pdclk = 156,
-		.baclk = 156,
-		.ap_clk_sel = AP_CLK_SRC_PLL1_624,
-	},
-	{
-		.pclk = 624,
-		.pdclk = 312,
-		.baclk = 156,
-		.ap_clk_sel = AP_CLK_SRC_PLL1_624,
-	},
-	{
-		.pclk = 800,
-		.pdclk = 400,
-		.baclk = 200,
-		.ap_clk_sel = AP_CLK_SRC_PLL2,
-	},
-	{
-		.pclk = 1066,
-		.pdclk = 533,
-		.baclk = 266,
-		.ap_clk_sel = AP_CLK_SRC_PLL2,
-	},
-	{
-		.pclk = 1101,
-		.pdclk = 550,
-		.baclk = 275,
-		.ap_clk_sel = AP_CLK_SRC_PLL3P,
-	},
-	{
-		.pclk = 1183,
-		.pdclk = 591,
-		.baclk = 295,
-		.ap_clk_sel = AP_CLK_SRC_PLL3P,
-	},
-	{
-		.pclk = 1283,
-		.pdclk = 641,
-		.baclk = 320,
-		.ap_clk_sel = AP_CLK_SRC_PLL3P,
-	},
-
-};
-
-static bool is_invalid_pp_1088(struct pxa988_cpu_opt *cop)
-{
-	if (cop->pclk == 156)
-		return true;
-	return false;
-}
-
 /*
  * 1) On Emei Z0, only support three ddr rates, be careful
  * when changing the PP table. The table should only have
@@ -679,53 +589,6 @@ static struct pxa988_ddr_axi_opt lpddr533_axi_oparray_z3ax[] = {
 	},
 };
 
-static struct pxa988_ddr_axi_opt lpddr400_axi_oparray_1088[] = {
-	{
-		.dclk = 156,
-		.ddr_tbl_index = 1,
-		.aclk = 78,
-		.ddr_clk_sel = DDR_AXI_CLK_SRC_PLL1_624,
-		.axi_clk_sel = DDR_AXI_CLK_SRC_PLL1_624,
-	},
-	{
-		.dclk = 312,
-		.ddr_tbl_index = 3,
-		.aclk = 156,
-		.ddr_clk_sel = DDR_AXI_CLK_SRC_PLL1_624,
-		.axi_clk_sel = DDR_AXI_CLK_SRC_PLL1_624,
-	},
-	{
-		.dclk = 400,
-		.ddr_tbl_index = 5,
-		.aclk = 200,
-		.ddr_clk_sel = DDR_AXI_CLK_SRC_PLL2P,
-		.axi_clk_sel = DDR_AXI_CLK_SRC_PLL2P,
-	},
-};
-
-static struct pxa988_ddr_axi_opt lpddr533_axi_oparray_1088[] = {
-	{
-		.dclk = 156,
-		.ddr_tbl_index = 1,
-		.aclk = 78,
-		.ddr_clk_sel = DDR_AXI_CLK_SRC_PLL1_624,
-		.axi_clk_sel = DDR_AXI_CLK_SRC_PLL1_624,
-	},
-	{
-		.dclk = 312,
-		.ddr_tbl_index = 3,
-		.aclk = 156,
-		.ddr_clk_sel = DDR_AXI_CLK_SRC_PLL1_624,
-		.axi_clk_sel = DDR_AXI_CLK_SRC_PLL1_624,
-	},
-	{
-		.dclk = 533,
-		.ddr_tbl_index = 5,
-		.aclk = 266,
-		.ddr_clk_sel = DDR_AXI_CLK_SRC_PLL2P,
-		.axi_clk_sel = DDR_AXI_CLK_SRC_PLL2P,
-	},
-};
 static struct platform_opt platform_op_arrays[] = {
 	{
 		.cpuid = 0xc09,
@@ -744,11 +607,7 @@ static struct platform_opt platform_op_arrays[] = {
 		.cpu_name = "PXA988_Z3Ax",
 		.cpu_opt = pxa988_op_array_z3ax,
 		.cpu_opt_size = ARRAY_SIZE(pxa988_op_array_z3ax),
-#if !defined(CONFIG_CORE_1248)
-		.df_max_cpurate = 1205,
-#else
 		.df_max_cpurate = 1248,
-#endif
 		.ddr_axi_opt = lpddr400_axi_oparray_z3ax,
 		.ddr_axi_opt_size = ARRAY_SIZE(lpddr400_axi_oparray_z3ax),
 	},
@@ -759,37 +618,9 @@ static struct platform_opt platform_op_arrays[] = {
 		.cpu_name = "PXA988_Z3Ax",
 		.cpu_opt = pxa988_op_array_z3ax,
 		.cpu_opt_size = ARRAY_SIZE(pxa988_op_array_z3ax),
-#if !defined(CONFIG_CORE_1248)
-		.df_max_cpurate = 1205,
-#else
 		.df_max_cpurate = 1248,
-#endif
 		.ddr_axi_opt = lpddr533_axi_oparray_z3ax,
 		.ddr_axi_opt_size = ARRAY_SIZE(lpddr533_axi_oparray_z3ax),
-	},
-	{
-		.cpuid = 0xc07,
-		.chipid = 0xa01088,
-		.ddrtype = LPDDR2_400M,
-		.cpu_name = "PXA1088",
-		.cpu_opt = pxa1088_op_array,
-		.cpu_opt_size = ARRAY_SIZE(pxa1088_op_array),
-		.df_max_cpurate = 1183,
-		.ddr_axi_opt = lpddr400_axi_oparray_1088,
-		.ddr_axi_opt_size = ARRAY_SIZE(lpddr400_axi_oparray_1088),
-		.is_cpuop_invalid_plt = is_invalid_pp_1088,
-	},
-	{
-		.cpuid = 0xc07,
-		.chipid = 0xa01088,
-		.ddrtype = LPDDR2_533M,
-		.cpu_name = "PXA1088",
-		.cpu_opt = pxa1088_op_array,
-		.cpu_opt_size = ARRAY_SIZE(pxa1088_op_array),
-		.df_max_cpurate = 1183,
-		.ddr_axi_opt = lpddr533_axi_oparray_1088,
-		.ddr_axi_opt_size = ARRAY_SIZE(lpddr533_axi_oparray_1088),
-		.is_cpuop_invalid_plt = is_invalid_pp_1088,
 	},
 };
 
@@ -893,10 +724,7 @@ static int __init __init_platform_opt(void)
 			chipid = 0xc9280;
 		else
 			chipid = 0xc9281;
-	} else if (cpu_is_pxa1088()) {
-		chipid = 0xa01088;
-	}
-
+	} else;
 	/*
 	 * FIXME: ddr type is hacked here as it can not be read from
 	 * HW, but FC code needs this info to identify DDR OPs.
@@ -914,16 +742,6 @@ static int __init __init_platform_opt(void)
 	}
 	BUG_ON(i == ARRAY_SIZE(platform_op_arrays));
 	cur_platform_opt = proc;
-
-	/* TD dual sim card */
-	if ((simcard_num == 3) && cpu_is_pxa1088())
-		cur_platform_opt->ddr_axi_opt[0].aclk = 156;
-
-	if (max_freq > cur_platform_opt->df_max_cpurate)
-		cur_platform_opt->df_max_cpurate = max_freq;
-	pr_info("Platform default max frequency: %dMHZ\n",
-		cur_platform_opt->df_max_cpurate);
-	return 0;
 }
 pure_initcall(__init_platform_opt);
 
@@ -942,18 +760,6 @@ static struct cpu_rtcwtc cpu_rtcwtc_ax[] = {
 	{.max_pclk = 1066, .l1_rtc = 0x99999999, .l2_rtc = 0x00009555,},
 	{.max_pclk = 1205, .l1_rtc = 0xAAAAAAAA, .l2_rtc = 0x0000A555,},
 };
-
-static struct cpu_rtcwtc cpu_rtcwtc_1088[] = {
-	{.max_pclk = 312, .l1_rtc = 0x02222222, .l2_rtc = 0x00002221,},
-	{.max_pclk = 800, .l1_rtc = 0x02666666, .l2_rtc = 0x00006265,},
-	{.max_pclk = 1183, .l1_rtc = 0x2AAAAAA, .l2_rtc = 0x0000A2A9,},
-	{.max_pclk = 1300, .l1_rtc = 0x02EEEEEE, .l2_rtc = 0x0000E2ED,},
-	/*
-	 * 1283M will also use 1300 setting, if we use 1300Mhz later,
-	 * the code doesn't need to be changed.
-	*/
-};
-
 static void __init __init_cpu_rtcwtc(struct pxa988_cpu_opt *cpu_opt)
 {
 	struct cpu_rtcwtc *cpu_rtcwtc;
@@ -964,11 +770,8 @@ static void __init __init_cpu_rtcwtc(struct pxa988_cpu_opt *cpu_opt)
 		size = ARRAY_SIZE(cpu_rtcwtc_z3);
 	} else if (cpu_is_pxa988_a0() || cpu_is_pxa986_a0()) {
 		cpu_rtcwtc = cpu_rtcwtc_ax;
-		size = ARRAY_SIZE(cpu_rtcwtc_ax);
-	} else if (cpu_is_pxa1088()) {
-		cpu_rtcwtc = cpu_rtcwtc_1088;
-		size = ARRAY_SIZE(cpu_rtcwtc_1088);
-	} else
+		size = ARRAY_SIZE(cpu_rtcwtc_ax);} 
+	else
 		return;
 
 	for (index = 0; index < size; index++)
@@ -2724,50 +2527,6 @@ static int dump_ddr_axi_op(char *buf, size_t size,
 			q->axi_clk_src);
 }
 
-#ifdef CONFIG_DDR_FC_HARDWARE
-static ssize_t lcd_blank_check_read(struct file *filp,
-	char __user *buffer, size_t count, loff_t *ppos)
-{
-	char buf[256] = { 0 };
-	int len = 0;
-	unsigned int value;
-	size_t size = sizeof(buf) - 1;
-	value = __raw_readl(APMU_DEBUG);
-	if (value & (MASK_LCD_BLANK_CHECK))
-		len = snprintf(buf, size,
-		"pxa1088 HW DFC in LCD v-Blank is disabled\n");
-	else
-		len = snprintf(buf, size,
-		"pxa1088 HW DFC in LCD v-Blank is enabled\n");
-	return simple_read_from_buffer(buffer, count, ppos, buf, len);
-}
-
-static ssize_t lcd_blank_check_write(struct file *filp,
-		const char __user *buffer, size_t count, loff_t *ppos)
-{
-	int start;
-	unsigned int value;
-	char buf[10] = { 0 };
-
-	if (copy_from_user(buf, buffer, count))
-		return -EFAULT;
-
-	sscanf(buf, "%d", &start);
-	value = __raw_readl(APMU_DEBUG);
-	if (start == 1)
-		value &= ~(MASK_LCD_BLANK_CHECK);
-	else if (start == 0)
-		value |= (MASK_LCD_BLANK_CHECK);
-	__raw_writel(value, APMU_DEBUG);
-	return count;
-}
-
-static const struct file_operations lcd_blank_check_fops = {
-	.read = lcd_blank_check_read,
-	.write = lcd_blank_check_write,
-};
-#endif
-
 /* Display current operating point */
 static ssize_t cur_cpu_op_show(struct file *filp, char __user *buffer,
 	size_t count, loff_t *ppos)
@@ -2864,34 +2623,23 @@ const struct file_operations cp_block_ddr_fc_fops = {
 static int pxa_powermode(u32 cpu)
 {
 	unsigned status_temp = 0;
-	if (cpu_is_pxa988()) {
-		if (has_feat_legacy_apmu_core_status()) {
-			status_temp = ((__raw_readl(APMU_CORE_STATUS)) &
-			((1 << (2 + 2 * cpu)) | (1 << (3 + 2 * cpu))));
-			if (!status_temp)
-				return PXA988_MAX_LPM_INDEX;
-			else if (status_temp & (1 << (2 + 2 * cpu)))
-				return PXA988_LPM_C1;
-			else if (status_temp & (1 << (3 + 2 * cpu)))
-				return PXA988_LPM_C2;
-		} else {
-			status_temp = ((__raw_readl(APMU_CORE_STATUS)) &
-			((1 << (3 + 3 * cpu)) | (1 << (4 + 3 * cpu))));
-			if (!status_temp)
-				return PXA988_MAX_LPM_INDEX;
-			if (status_temp & (1 << (3 + 3 * cpu)))
-				return PXA988_LPM_C1;
-			else if (status_temp & (1 << (4 + 3 * cpu)))
-				return PXA988_LPM_C2;
-		}
-	} else if (cpu_is_pxa1088()) {
+	if (has_feat_legacy_apmu_core_status()) {
 		status_temp = ((__raw_readl(APMU_CORE_STATUS)) &
-		((1 << (6 + 3 * cpu)) | (1 << (7 + 3 * cpu))));
+		((1 << (2 + 2 * cpu)) | (1 << (3 + 2 * cpu))));
 		if (!status_temp)
 			return PXA988_MAX_LPM_INDEX;
-		if (status_temp & (1 << (6 + 3 * cpu)))
+		else if (status_temp & (1 << (2 + 2 * cpu)))
 			return PXA988_LPM_C1;
-		else if (status_temp & (1 << (7 + 3 * cpu)))
+		else if (status_temp & (1 << (3 + 2 * cpu)))
+			return PXA988_LPM_C2;
+	} else {
+		status_temp = ((__raw_readl(APMU_CORE_STATUS)) &
+		((1 << (3 + 3 * cpu)) | (1 << (4 + 3 * cpu))));
+		if (!status_temp)
+			return PXA988_MAX_LPM_INDEX;
+		if (status_temp & (1 << (3 + 3 * cpu)))
+			return PXA988_LPM_C1;
+		else if (status_temp & (1 << (4 + 3 * cpu)))
 			return PXA988_LPM_C2;
 	}
 	return PXA988_MAX_LPM_INDEX;
